@@ -1,6 +1,9 @@
-package net.adyan.tutorialmod;
+package net.adyan.practicemod;
 
 import com.mojang.logging.LogUtils;
+
+//import net.adyan.practicemod.items.ModCreativeModeTabs;
+import net.adyan.practicemod.items.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
@@ -30,22 +33,25 @@ import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(TutorialMod.MODID)
-public class TutorialMod
+@Mod(PracticeMod.MODID)
+public class PracticeMod
 {
     // Define mod id in a common place for everything to reference
-    public static final String MODID = "tutorialmod";
+    public static final String MODID = "practicemod";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public TutorialMod()
+    public PracticeMod()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Register the commonSetup method for modloading
+        //ModCreativeModeTabs.Register(modEventBus);
+
+        ModItems.register(modEventBus);
+        
         modEventBus.addListener(this::commonSetup);
 
-        // Register ourselves for server and other game events we are interested in
+        
         MinecraftForge.EVENT_BUS.register(this);
 
         // Register the item to a creative tab
@@ -63,7 +69,10 @@ public class TutorialMod
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
-
+        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(ModItems.SAPPHIRE);
+            event.accept(ModItems.RAW_SAPPHIRE);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
